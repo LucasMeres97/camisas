@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo — Camisas Seleção Brasileira</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --amarelo: #F5D000;
+    --verde: #009C3B;
+    --azul: #003087;
+    --preto: #0a0a0a;
+    --cinza-escuro: #141414;
+    --cinza: #1e1e1e;
+    --cinza-borda: #2c2c2c;
+    --texto: #f0f0f0;
+    --texto-muted: #888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--preto);
+    color: var(--texto);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--cinza-escuro);
+    border-bottom: 3px solid var(--amarelo);
+    padding: 32px 40px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-flag {
+    display: flex;
+    gap: 6px;
+  }
+  .flag-strip { width: 8px; height: 56px; border-radius: 2px; }
+  .flag-strip.g { background: var(--verde); }
+  .flag-strip.y { background: var(--amarelo); }
+  .flag-strip.b { background: var(--azul); }
+
+  .header-text h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    letter-spacing: 3px;
+    color: var(--amarelo);
+    line-height: 1;
+  }
+  .header-text p {
+    color: var(--texto-muted);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 40px;
+    background: var(--cinza-escuro);
+    border-bottom: 1px solid var(--cinza-borda);
+    overflow-x: auto;
+  }
+
+  .tab {
+    padding: 14px 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: var(--texto-muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .tab:hover { color: var(--texto); }
+  .tab.active { color: var(--amarelo); border-bottom-color: var(--amarelo); }
+
+  /* ── SECTION ── */
+  .section {
+    display: none;
+    padding: 40px;
+    animation: fadeIn 0.3s ease;
+  }
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    color: var(--verde);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--cinza-borda);
+  }
+
+  /* ── GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--cinza);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--amarelo);
+    box-shadow: 0 8px 32px rgba(245,208,0,0.12);
+  }
+
+  .card-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    object-position: top center;
+    background: #111;
+    display: block;
+  }
+
+  .card-body {
+    padding: 14px 16px;
+  }
+
+  .card-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+  .badge-player { background: rgba(0,156,59,0.2); color: var(--verde); border: 1px solid rgba(0,156,59,0.4); }
+  .badge-torcedor { background: rgba(245,208,0,0.15); color: var(--amarelo); border: 1px solid rgba(245,208,0,0.3); }
+  .badge-retro { background: rgba(0,48,135,0.3); color: #6a9fd8; border: 1px solid rgba(0,48,135,0.5); }
+  .badge-feminino { background: rgba(200,100,200,0.15); color: #d88ad8; border: 1px solid rgba(200,100,200,0.3); }
+  .badge-goleiro { background: rgba(200,100,0,0.2); color: #e8a060; border: 1px solid rgba(200,100,0,0.4); }
+
+  .card-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--texto);
+    line-height: 1.35;
+    margin-bottom: 4px;
+  }
+
+  .card-detail {
+    font-size: 0.78rem;
+    color: var(--texto-muted);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  .detail-pill {
+    background: rgba(255,255,255,0.05);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--cinza);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 14px;
+    max-width: 480px;
+    width: 100%;
+    overflow: hidden;
+    animation: popIn 0.25s ease;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+    background: #111;
+  }
+  .modal-body { padding: 24px; }
+  .modal-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--amarelo); margin: 8px 0 4px; }
+  .modal-details { font-size: 0.85rem; color: var(--texto-muted); line-height: 1.8; }
+  .modal-close {
+    margin-top: 18px;
+    width: 100%;
+    padding: 12px;
+    background: var(--amarelo);
+    color: var(--preto);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .modal-close:hover { background: #e0be00; }
+
+  /* ── COUNTER ── */
+  .counter-bar {
+    padding: 16px 40px;
+    background: var(--cinza-escuro);
+    border-bottom: 1px solid var(--cinza-borda);
+    display: flex;
+    gap: 32px;
+    font-size: 0.8rem;
+    color: var(--texto-muted);
+    letter-spacing: 1px;
+  }
+  .counter-item span { color: var(--amarelo); font-weight: 700; }
+
+  /* ── SIZE TABLES ── */
+  .size-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .size-card {
+    background: var(--cinza);
+    border: 1px solid var(--cinza-borda);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .size-card-title {
+    background: var(--amarelo);
+    color: var(--preto);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 2px;
+    padding: 10px 16px;
+  }
+  .size-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+  .size-table th {
+    background: rgba(255,255,255,0.06);
+    color: var(--texto-muted);
+    padding: 8px 10px;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+  .size-table td {
+    padding: 7px 10px;
+    text-align: center;
+    border-top: 1px solid var(--cinza-borda);
+    color: var(--texto);
+  }
+  .size-table tr:hover td { background: rgba(245,208,0,0.05); }
+  .size-table td:first-child { font-weight: 700; color: var(--amarelo); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    header { padding: 20px; }
+    .header-text h1 { font-size: 2rem; }
+    .tabs { padding: 0 20px; }
+    .section { padding: 20px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+    .counter-bar { padding: 12px 20px; gap: 16px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-flag">
+    <div class="flag-strip g"></div>
+    <div class="flag-strip y"></div>
+    <div class="flag-strip g"></div>
+    <div class="flag-strip y"></div>
+    <div class="flag-strip b"></div>
+    <div class="flag-strip y"></div>
+    <div class="flag-strip g"></div>
+  </div>
+  <div class="header-text">
+    <h1>Seleção Brasileira</h1>
+    <p>Catálogo Oficial de Camisas · CBF</p>
+  </div>
+</header>
+
+<div class="counter-bar">
+  <div class="counter-item">Total: <span id="total-count">0</span> camisas</div>
+  <div class="counter-item">Jogador: <span id="player-count">0</span></div>
+  <div class="counter-item">Torcedor: <span id="torcedor-count">0</span></div>
+  <div class="counter-item">Feminino: <span id="fem-count">0</span></div>
+  <div class="counter-item">Retrô/Treino: <span id="retro-count">0</span></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('todas')">Todas</button>
+  <button class="tab" onclick="showTab('jogador')">⚽ Versão Jogador</button>
+  <button class="tab" onclick="showTab('torcedor')">🟡 Torcedor Masc.</button>
+  <button class="tab" onclick="showTab('feminino')">👚 Feminino</button>
+  <button class="tab" onclick="showTab('retro')">🕰 Retrô / Treino</button>
+  <button class="tab" onclick="showTab('medidas')">📏 Tabela de Medidas</button>
+</div>
+<div class="section active" id="tab-todas">
+  <div id="grid-todas" class="grid"></div>
+</div>
+
+<!-- JOGADOR -->
+<div class="section" id="tab-jogador">
+  <div class="section-title">Versão Jogador — Masculino</div>
+  <div id="grid-jogador" class="grid"></div>
+</div>
+
+<!-- TORCEDOR -->
+<div class="section" id="tab-torcedor">
+  <div class="section-title">Torcedor — Masculino</div>
+  <div id="grid-torcedor" class="grid"></div>
+</div>
+
+<!-- FEMININO -->
+<div class="section" id="tab-feminino">
+  <div class="section-title">Feminino — Versão Torcedor</div>
+  <div id="grid-feminino" class="grid"></div>
+</div>
+
+<!-- RETRÔ -->
+<div class="section" id="tab-retro">
+  <div class="section-title">Retrô — Unissex</div>
+  <div id="grid-retro" class="grid"></div>
+</div>
+
+<!-- MEDIDAS -->
+<div class="section" id="tab-medidas">
+  <div class="section-title">Tabelas de Medidas</div>
+  <div class="size-grid">
+
+    <div class="size-card">
+      <div class="size-card-title">📏 Versão Torcedor (Fan)</div>
+      <table class="size-table">
+        <thead><tr><th>Tam.</th><th>Comprimento</th><th>Largura</th><th>Altura</th><th>Peso (kg)</th></tr></thead>
+        <tbody>
+          <tr><td>P</td><td>69–71</td><td>53–55</td><td>162–170</td><td>50–62</td></tr>
+          <tr><td>M</td><td>71–73</td><td>55–57</td><td>170–176</td><td>62–78</td></tr>
+          <tr><td>G</td><td>73–75</td><td>57–58</td><td>176–182</td><td>78–83</td></tr>
+          <tr><td>GG</td><td>75–78</td><td>58–60</td><td>182–190</td><td>83–90</td></tr>
+          <tr><td>2XL</td><td>78–81</td><td>60–62</td><td>190–195</td><td>90–97</td></tr>
+          <tr><td>3XL</td><td>81–83</td><td>62–64</td><td>192–197</td><td>97–104</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="size-card">
+      <div class="size-card-title">⚽ Versão Jogador (Player)</div>
+      <table class="size-table">
+        <thead><tr><th>Tam.</th><th>Comprimento</th><th>Largura</th><th>Altura</th><th>Peso (kg)</th></tr></thead>
+        <tbody>
+          <tr><td>P</td><td>67–69</td><td>49–51</td><td>162–170</td><td>50–62</td></tr>
+          <tr><td>M</td><td>69–71</td><td>51–53</td><td>170–175</td><td>62–75</td></tr>
+          <tr><td>G</td><td>71–73</td><td>53–55</td><td>175–180</td><td>75–80</td></tr>
+          <tr><td>GG</td><td>73–76</td><td>55–57</td><td>180–185</td><td>80–85</td></tr>
+          <tr><td>2XL</td><td>76–78</td><td>57–60</td><td>185–190</td><td>85–90</td></tr>
+          <tr><td>3XL</td><td>78–79</td><td>60–63</td><td>190–195</td><td>90–95</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="size-card">
+      <div class="size-card-title">👚 Versão Feminina</div>
+      <table class="size-table">
+        <thead><tr><th>Tam.</th><th>Comprimento</th><th>Largura</th><th>Altura</th></tr></thead>
+        <tbody>
+          <tr><td>P</td><td>61–63</td><td>40–41</td><td>150–160</td></tr>
+          <tr><td>M</td><td>63–66</td><td>41–44</td><td>160–165</td></tr>
+          <tr><td>G</td><td>66–69</td><td>44–47</td><td>165–170</td></tr>
+          <tr><td>GG</td><td>69–71</td><td>47–50</td><td>170–175</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="size-card">
+      <div class="size-card-title">🕰 Versão Retrô</div>
+      <table class="size-table">
+        <thead><tr><th>Tam.</th><th>Largura</th><th>Comprimento</th><th>Altura</th></tr></thead>
+        <tbody>
+          <tr><td>P</td><td>48</td><td>67</td><td>160–165</td></tr>
+          <tr><td>M</td><td>50</td><td>70</td><td>165–170</td></tr>
+          <tr><td>G</td><td>52.5</td><td>73.5</td><td>170–175</td></tr>
+          <tr><td>GG</td><td>55</td><td>77</td><td>175–178</td></tr>
+          <tr><td>2XL</td><td>57</td><td>80</td><td>179–184</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="size-card">
+      <div class="size-card-title">🎽 Camisa Polo</div>
+      <table class="size-table">
+        <thead><tr><th>Tam.</th><th>Largura</th><th>Comprimento</th><th>Manga</th><th>Altura</th><th>Peso (kg)</th></tr></thead>
+        <tbody>
+          <tr><td>P</td><td>48</td><td>70</td><td>34.5</td><td>160–170</td><td>60–65</td></tr>
+          <tr><td>M</td><td>50</td><td>72</td><td>36</td><td>165–175</td><td>65–70</td></tr>
+          <tr><td>G</td><td>52</td><td>74</td><td>37.5</td><td>175–180</td><td>70–75</td></tr>
+          <tr><td>GG</td><td>54</td><td>76</td><td>39</td><td>180–185</td><td>75–80</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  <p style="color:var(--texto-muted);font-size:0.8rem;margin-top:20px">* Todas as medidas em centímetros. Em caso de dúvida, prefira o tamanho maior.</p>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <img class="modal-img" id="modal-img" src="" alt="">
+    <div class="modal-body">
+      <div id="modal-badge"></div>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-details" id="modal-details"></div>
+      <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const jerseys = [
+  // ── VERSÃO JOGADOR ──
+  {
+    cat: 'jogador',
+    badge: 'badge-player',
+    badgeLabel: 'Versão Jogador',
+    name: 'Brasil 2026 — Home Manga Curta',
+    details: 'Amarela · Gola V Verde/Azul · Manga Curta · Nike · S-4XL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_56__4_.jpeg'
+  },
+  {
+    cat: 'jogador',
+    badge: 'badge-player',
+    badgeLabel: 'Versão Jogador',
+    name: 'Brasil 2026 — Home Manga Longa',
+    details: 'Amarela · Gola V Verde Escuro · Manga Longa · Nike · S-4XL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_38__1_.jpeg'
+  },
+  {
+    cat: 'jogador',
+    badge: 'badge-player',
+    badgeLabel: 'Versão Jogador',
+    name: 'Brasil 2026 — Away Manga Curta',
+    details: 'Azul/Preta · Detalhes Amarelos · Jordan Brand · S-3XL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_56__3_.jpeg'
+  },
+  {
+    cat: 'jogador',
+    badge: 'badge-goleiro',
+    badgeLabel: 'Goleiro',
+    name: 'Brasil 2026 — Goleiro Manga Longa',
+    details: 'Estampa Zebra Preto/Branco · Manga Longa · Nike · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_55__3_.jpeg'
+  },
+  {
+    cat: 'jogador',
+    badge: 'badge-player',
+    badgeLabel: 'Versão Jogador',
+    name: 'Brasil 25/26 — Home Manga Curta',
+    details: 'Amarela · Gola Verde/Azul · Manga Curta · Nike · S-3XL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_39__2_.jpeg'
+  },
+
+  // ── FEMININO ──
+  {
+    cat: 'feminino',
+    badge: 'badge-feminino',
+    badgeLabel: 'Feminino',
+    name: 'Brasil 2026 — Home Feminina',
+    details: 'Amarela · Gola V Verde · Corte Feminino · Nike · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_54__1_.jpeg'
+  },
+  {
+    cat: 'feminino',
+    badge: 'badge-feminino',
+    badgeLabel: 'Feminino',
+    name: 'Brasil 2026 — Away Feminina',
+    details: 'Azul/Preta · Detalhes Amarelos · Jordan Brand · Corte Feminino · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_54.jpeg'
+  },
+
+  // ── RETRÔ ──
+  {
+    cat: 'retro',
+    badge: 'badge-retro',
+    badgeLabel: 'Retrô',
+    name: 'Brasil 1957/62 — Away Retrô',
+    details: 'Azul com Poás Brancos · Gola Redonda · Nike · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_55__2_.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-retro',
+    badgeLabel: 'Retrô',
+    name: 'Brasil 1994/96 — Away Retrô (Umbro)',
+    details: 'Azul · Escudo CBF Duplo · Umbro · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_56.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-retro',
+    badgeLabel: 'Retrô',
+    name: 'Brasil 1998 — Away Manga Longa Retrô',
+    details: 'Azul · Listras Brancas · Manga Longa · Nike · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_55.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-goleiro',
+    badgeLabel: 'Goleiro Retrô',
+    name: 'Brasil 1998 — Goleiro Manga Longa Retrô',
+    details: 'Laranja · Listras Amarelas · Manga Longa · Nike · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_56__2_.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-goleiro',
+    badgeLabel: 'Goleiro Retrô',
+    name: 'Brasil 1998 — Goleiro Verde Retrô',
+    details: 'Verde Escuro · Detalhes Amarelos · Manga Curta · Nike · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_54__4_.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-retro',
+    badgeLabel: 'Retrô',
+    name: 'Brasil 2004 — Home Manga Longa Retrô',
+    details: 'Amarela · Detalhes Verdes · Manga Longa · Nike · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_39__1_.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-retro',
+    badgeLabel: 'Retrô',
+    name: 'Brasil 2004 — Edição Especial Preta Manga Longa',
+    details: 'Preta · Escudo CBD · Cadarço · Manga Longa · Nike · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_38.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-retro',
+    badgeLabel: 'Retrô',
+    name: 'Brasil 2006 — Home Manga Longa Retrô',
+    details: 'Amarela · Gola Redonda Verde · Manga Longa · Nike · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_55__1_.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-retro',
+    badgeLabel: 'Retrô',
+    name: 'Brasil 2012/13 — Home Retrô',
+    details: 'Amarela · Punhos Verdes · Manga Curta · Nike · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_55__4_.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-retro',
+    badgeLabel: 'Retrô',
+    name: 'Brasil 2013/14 — Edição Especial Preta',
+    details: 'Preta · BRASIL + Estrelas em Relevo · Manga Curta · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_54__3_.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-retro',
+    badgeLabel: 'Retrô',
+    name: 'Brasil 2020 — Treino Verde Retrô',
+    details: 'Verde · Guaraná Antarctica + Itaú · Manga Curta · Nike · S-XXL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_56__1_.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-torcedor',
+    badgeLabel: 'Torcedor',
+    name: 'Brasil 2022 — Copa do Mundo Home',
+    details: 'Amarela · Patch Copa + Live Proud · Manga Curta · Nike · S-4XL',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_55__1_.jpeg'
+  },
+  {
+    cat: 'retro',
+    badge: 'badge-retro',
+    badgeLabel: 'Retrô',
+    name: 'Brasil — Moletom Listrado Verde/Amarelo',
+    details: 'Verde Escuro c/ Listras Amarelas · Manga Longa · Unissex · Nike',
+    img: 'WhatsApp_Image_2026-03-30_at_18_57_39.jpeg'
+  },
+];
+
+// Fix: 2022 Copa do Mundo has wrong img above, correct it
+jerseys[18].img = 'WhatsApp_Image_2026-03-30_at_18_57_54__2_.jpeg';
+
+// ── LOTE 2 ──
+jerseys.push(
+  // RETRÔ
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2002 — Home Manga Longa Retrô', details:'Amarela · Detalhes Verdes · Manga Longa · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_57__1_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1998 — Home Manga Longa Retrô', details:'Amarela · Listras Verdes · Manga Longa · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_57__2_.jpeg' },
+  { cat:'retro', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2022 — Copa do Mundo Away', details:'Azul · Mangas com Estampa de Onça · Patch Copa · Nike · S-4XL', img:'WhatsApp_Image_2026-03-30_at_18_57_57__3_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1958 — Home Retrô (V1)', details:'Amarela · Escudo CBD · Gola Polo Verde · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_57__4_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2018 — Home Retrô', details:'Amarela · Gola Redonda Verde · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_57__5_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2002 — Away Manga Longa Retrô', details:'Azul · Detalhes Brancos · Manga Longa · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_57.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1997 — Home Retrô', details:'Amarela · Gola V Verde · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_58__1_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1971 — Home Retrô', details:'Amarela · Escudo CBD · Gola Redonda Verde · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_58__2_.jpeg' },
+  { cat:'retro', badge:'badge-goleiro', badgeLabel:'Goleiro Retrô', name:'Brasil 2002 — Goleiro Preto Retrô', details:'Preta · Detalhes Brancos · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_58__3_.jpeg' },
+  // FEMININO
+  { cat:'feminino', badge:'badge-feminino', badgeLabel:'Feminino', name:'Brasil 2024 — Away Feminina', details:'Azul · Listras Finas · Gola V Verde · Jordan Brand · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_58__4_.jpeg' },
+  // TORCEDOR
+  { cat:'torcedor', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2025 — Home Torcedor', details:'Amarela · Gola V Verde/Azul · Manga Curta · Nike · S-4XL', img:'WhatsApp_Image_2026-03-30_at_18_57_58.jpeg' },
+  { cat:'torcedor', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2026 — Away Torcedor', details:'Azul/Preta · Detalhes Amarelos · Jordan Brand · S-4XL', img:'WhatsApp_Image_2026-03-30_at_18_57_59__1_.jpeg' },
+  // RETRÔ
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1997 — Away Retrô', details:'Azul · Gola V Branca · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_59__2_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1958 — Home Retrô (V2)', details:'Amarela · "BRASIL" + Estrelas · Gola V Verde · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_59__3_.jpeg' },
+  // FEMININO
+  { cat:'feminino', badge:'badge-feminino', badgeLabel:'Feminino', name:'Brasil 2024 — Home Feminina', details:'Amarela · Estampa Arabesco · Gola V Verde · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_59__4_.jpeg' },
+  // RETRÔ / TREINO
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2019/20 — Home Torcedor', details:'Amarela · Gola V Verde · Manga Curta · Nike · S-4XL', img:'WhatsApp_Image_2026-03-30_at_18_57_59__5_.jpeg' },
+  { cat:'retro', badge:'badge-goleiro', badgeLabel:'Goleiro Retrô', name:'Brasil 1998 — Goleiro Verde Retrô (V2)', details:'Verde · Detalhes Amarelos · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_57_59.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Treino', name:'Brasil 2021 — Treino Azul Turquesa', details:'Azul Turquesa · Guaraná Antarctica · Itaú · Vivo · Manga Curta · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_00__1_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Treino', name:'Brasil 2021 — Pré-Jogo Azul Turquesa', details:'Azul Turquesa · Guaraná · Itaú · Gola Polo · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_00__2_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Treino', name:'Brasil — Treino Verde Fluorescente', details:'Verde Fluorescente · Guaraná Antarctica · Itaú · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_00__3_.jpeg' }
+);
+
+// ── LOTE 3 ──
+jerseys.push(
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2014 — Home Retrô', details:'Amarela · Gola V Verde · Botão · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_00__4_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2004/06 — Away Retrô', details:'Azul · Detalhes Brancos · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_00.jpeg' },
+  { cat:'jogador', badge:'badge-player', badgeLabel:'Versão Jogador', name:'Brasil 2023 — Home Versão Jogador', details:'Amarela · Estampa Geométrica · Gola V Verde · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_01__1_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1998 — Away Retrô (M/C)', details:'Azul · Listras Brancas · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_01__2_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1998 — Home Retrô (M/C)', details:'Amarela · Listras Verdes · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_01__3_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2002 — Home Retrô (M/C)', details:'Amarela · Detalhes Verdes · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_01__4_.jpeg' },
+  { cat:'torcedor', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2026 — Home Torcedor', details:'Amarela · Gola V Verde/Azul · Manga Curta · Nike · S-4XL', img:'WhatsApp_Image_2026-03-30_at_18_58_01.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2006 — Home Retrô (M/C)', details:'Amarela · Gola Verde · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_02__1_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1997 — Away Retrô (V2)', details:'Azul · Gola V Branca · Detalhes Brancos · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_02__2_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1988 — Home Retrô (Topper)', details:'Amarela · Escudo CBF · Gola V Verde · Topper · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_02__3_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1992 — Away Retrô (Umbro)', details:'Azul · Escudo CBF em Relevo · Umbro · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_02__4_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1984 — Home Retrô (Topper)', details:'Amarela · "BRASIL" Frontal · Listras Verdes · Topper · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_02__5_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2010 — Home Retrô', details:'Amarela · 5 Estrelas · Gola Verde · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_02.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2002 — Away Retrô (M/C)', details:'Azul · Detalhes Brancos · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_03__1_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1991/93 — Home Retrô (Umbro)', details:'Amarela · Gola Polo Verde · Umbro · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_03__2_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 1993/94 — Home Retrô (Umbro)', details:'Amarela · Escudos CBF em Laranja · Umbro · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_03__3_.jpeg' },
+  { cat:'torcedor', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2024 — Home Torcedor', details:'Amarela · Estampa Arabesco · Gola V Verde · Nike · S-4XL', img:'WhatsApp_Image_2026-03-30_at_18_58_03__4_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2006 — Away Retrô', details:'Azul · Detalhe Branco · Gola Redonda · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_03.jpeg' },
+  { cat:'torcedor', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2023 — Home Torcedor', details:'Amarela · Gola V Verde · Manga Curta · Nike · S-4XL', img:'WhatsApp_Image_2026-03-30_at_18_58_04__1_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2018 — Away Retrô', details:'Azul · Estampa Geométrica · Detalhes Amarelos · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_04__2_.jpeg' }
+);
+
+// ── LOTE 4 (FINAL) ──
+jerseys.push(
+  { cat:'torcedor', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2020 — Home Torcedor', details:'Amarela · Gola Redonda Verde · Manga Curta · Nike · S-XXXL', img:'WhatsApp_Image_2026-03-30_at_18_58_04__3_.jpeg' },
+  { cat:'torcedor', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2024 — Away Torcedor', details:'Azul · Listras Horizontais · Gola V Turquesa · Nike · S-4XL', img:'WhatsApp_Image_2026-03-30_at_18_58_04__4_.jpeg' },
+  { cat:'torcedor', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2022 — Edição Especial Preta', details:'Preta · Detalhes Dourados · Estampa · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_04.jpeg' },
+  { cat:'torcedor', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2019 — Away Torcedor (Branca)', details:'Branca · Gola Polo Azul · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_05__1_.jpeg' },
+  { cat:'torcedor', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2020 — Home Torcedor (V2)', details:'Amarela · Escudo CBF · Gola Redonda Verde · Nike · S-XXXL', img:'WhatsApp_Image_2026-03-30_at_18_58_05__2_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Treino', name:'Brasil — Treino Cinza Escuro', details:'Cinza Escuro · Guaraná Antarctica · Itaú · Manga Curta · Nike', img:'WhatsApp_Image_2026-03-30_at_18_58_05__3_.jpeg' },
+  { cat:'torcedor', badge:'badge-torcedor', badgeLabel:'Torcedor', name:'Brasil 2020 — Away Torcedor', details:'Azul · Escudo CBF · Nike Swoosh Amarelo · S-XXXL', img:'WhatsApp_Image_2026-03-30_at_18_58_05__4_.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2004/06 — Home Retrô (M/C)', details:'Amarela · Gola V Verde · Detalhes Verdes · Manga Curta · Nike · S-XXL', img:'WhatsApp_Image_2026-03-30_at_18_58_05.jpeg' },
+  { cat:'retro', badge:'badge-retro', badgeLabel:'Retrô', name:'Brasil 2014 — Away Retrô', details:'Azul · Listras Horizontais · Gola V · Manga Curta · Nike', img:'WhatsApp_Image_2026-03-30_at_18_58_06.jpeg' }
+);
+
+function buildCard(j, idx) {
+  return `
+    <div class="card" onclick="openModal(${idx})">
+      <img class="card-img" src="${j.img}" alt="${j.name}" loading="lazy" onerror="this.style.background='#222'">
+      <div class="card-body">
+        <span class="card-badge ${j.badge}">${j.badgeLabel}</span>
+        <div class="card-name">${j.name}</div>
+        <div class="card-detail">
+          ${j.details.split('·').map(d => `<span class="detail-pill">${d.trim()}</span>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderGrids() {
+  const gridTodas = document.getElementById('grid-todas');
+  const gridJogador = document.getElementById('grid-jogador');
+  const gridTorcedor = document.getElementById('grid-torcedor');
+  const gridFeminino = document.getElementById('grid-feminino');
+  const gridRetro = document.getElementById('grid-retro');
+
+  let todas = '', jogador = '', torcedor = '', feminino = '', retro = '';
+  jerseys.forEach((j, i) => {
+    const card = buildCard(j, i);
+    todas += card;
+    if (j.cat === 'jogador') jogador += card;
+    if (j.cat === 'torcedor') torcedor += card;
+    if (j.cat === 'feminino') feminino += card;
+    if (j.cat === 'retro') retro += card;
+  });
+
+  gridTodas.innerHTML = todas;
+  gridJogador.innerHTML = jogador;
+  gridTorcedor.innerHTML = torcedor;
+  gridFeminino.innerHTML = feminino;
+  gridRetro.innerHTML = retro;
+
+  document.getElementById('total-count').textContent = jerseys.length;
+  document.getElementById('player-count').textContent = jerseys.filter(j=>j.cat==='jogador').length;
+  document.getElementById('torcedor-count').textContent = jerseys.filter(j=>j.cat==='torcedor').length;
+  document.getElementById('fem-count').textContent = jerseys.filter(j=>j.cat==='feminino').length;
+  document.getElementById('retro-count').textContent = jerseys.filter(j=>j.cat==='retro').length;
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function openModal(idx) {
+  const j = jerseys[idx];
+  document.getElementById('modal-img').src = j.img;
+  document.getElementById('modal-badge').innerHTML = `<span class="card-badge ${j.badge}">${j.badgeLabel}</span>`;
+  document.getElementById('modal-name').textContent = j.name;
+  document.getElementById('modal-details').innerHTML = j.details.split('·').map(d => `• ${d.trim()}`).join('<br>');
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target.id === 'modal') document.getElementById('modal').classList.remove('open');
+}
+
+renderGrids();
+</script>
+</body>
+</html>
